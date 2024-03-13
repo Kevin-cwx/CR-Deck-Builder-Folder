@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title></title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+</head>
+
+<body>
+
+  <h1>CR deck creator</h1>
+  <hr>
+  <!-- Create CR Deck link by voice -->
+
+  <!-- 
+-Split by troop, building, spell
+-Order deck by elixer ASC
+
+-->
+
+
+  <button id='btnGiveCommand'>Give Command!</button>
+  <button id='MyStopRecognitionBtn' onclick="MyStopRecognition()">Stop device from Listening</button>
+  <br><br>
+  <button id="GenerateLinkBtn" onclick="GenerateLink()">Generate Link </button>
+  <button id="GenerateLinkBtn" onclick="GenerateLinkByVoice()">🗣️Generate Link By Voice </button>
+
+  <br><br>
+  <span id='message'></span>
+
+
+  <script>
+    var log = console.log.bind(console);
+    var longText;
+
+    $(document).ready(function () { 
+      recognition.start();
+    });
+    // ##############################################################################################################
+    var message = document.querySelector('#message');
+
+    var SpeechRecognition = SpeechRecognition || webkitSpeechRecognition;
+    var SpeechGrammarList = SpeechGrammarList || webkitSpeechGrammarList;
+
+    var grammar = '#JSGF V1.0;'
+
+    var recognition = new SpeechRecognition();
+    var speechRecognitionList = new SpeechGrammarList();
+    speechRecognitionList.addFromString(grammar, 1);
+    recognition.continuous = true;
+    recognition.grammars = speechRecognitionList;
+    recognition.lang = 'en-US';
+    recognition.interimResults = false;
+
+    recognition.onresult = function (event) {
+      var last = event.results.length - 1;
+       longText = event.results[last][0].transcript;
+
+      log("You just said: " + longText)
+      
+
+      message.textContent = 'Voice Input: ' + longText + '.';
+
+      if (longText.toLowerCase() === 'chuck') {
+        recognition.stop();
+        log("@meh");
+      }
+      // MY CODE
+
+
+      function GenerateLinkByVoice() {}
+//https://link.clashroyale.com/deck/en?deck=26000016;26000027;26000012;26000061;26000015;28000011;28000007;28000016;
+
+var FirstArrayDeckText = [];
+//
+//var longText = "Sparky mirror battle healer electro wizard electro dragon wizard elixir Golem lightning";
+//var longText = "giant skeleton fireball ice spirit zap knight giant barbarians royal giant";
+//var longText = "tornado dark prince battle healer prince electro dragon skeletons heal spirit goblins";
+
+//NOTES: elixir,
+
+
+longText = longText.toLowerCase();
+
+var res = longText.split(" ");
+
+var ArrayAllCardsText = ['archers', 'electro dragon', 'goblin giant', 'mega minion', 'royal hogs', 'arrows', 'electro giant', 'goblin hut', 'miner', 'royal recruits', 'baby dragon', 'electro wizard', 'goblins', 'mini pekka', 'skeleton army', 'balloon', 'elite barbarians', 'golem', 'minion horde', 'skeleton barrel', 'bandit', 'elixir collector', 'graveyard', 'minions', 'skeleton dragons', 'barbarian barrel', 'elixir golem', 'guards', 'mirror', 'skeletons', 'barbarian hut', 'executioner', 'heal spirit', 'mortar', 'sparky', 'barbarians', 'fire spirits', 'hog rider', 'musketeer', 'spear goblins', 'bats', 'fireball', 'hunter', 'night witch', 'tesla', 'battle healer', 'firecracker', 'ice golem', 'pekka', 'the log', 'battle ram', 'fisherman', 'ice spirit', 'poison', 'three musketeers', 'bomb tower', 'flying machine', 'ice wizard', 'prince', 'tombstone', 'bomber', 'freeze', 'inferno dragon', 'princess', 'tornado', 'bowler', 'furnace', 'inferno tower', 'rage', 'valkyrie', 'cannon cart', 'giant skeleton', 'knight', 'ram rider', 'wall breakers', 'cannon', 'giant snowball', 'lava hound', 'rascals', 'witch', 'clone', 'giant', 'lightning', 'rocket', 'wizard', 'dark prince', 'goblin barrel', 'lumberjack', 'royal delivery', 'x bow', 'dart goblin', 'goblin cage', 'magic archer', 'royal ghost', 'zap', 'earthquake', 'goblin gang', 'mega knight', 'royal giant', 'zappies'];
+
+//
+//Work that was done in console
+
+var i;
+var TempArray2 = [];
+
+for (i = 0; i < res.length; i++) {
+
+  console.log(res[i] + "     " + ArrayAllCardsText.includes(res[i]));
+
+
+  //***************************************************
+
+  //Double words - "battle healer"
+  // Add double word cards to array
+  //if(ArrayAllCardsText.includes(res[i])   == false ){ //checks if its a double word
+
+  if (ArrayAllCardsText.includes(res[i] + " " + res[i + 1]) == true) { //checks if double word is valid
+    TempArray2.push(res[i] + " " + res[i + 1]);
+    i = i + 1;
+  }
+
+  console.log(res[i] + " " + res[i + 1] + "     " + ArrayAllCardsText.includes(res[i] + " " + res[i + 1]));
+
+  //} //END 2nd IF
+  //***************************************************
+
+  // Add single word cards to array
+  if (ArrayAllCardsText.includes(res[i]) == true & ArrayAllCardsText.includes(res[i - 1] + " " + res[i]) == true) {
+    //do nothing
+  } else if (ArrayAllCardsText.includes(res[i]) == true) {
+    TempArray2.push(res[i]);
+
+  } else if (ArrayAllCardsText.includes(res[i]) == true & ArrayAllCardsText.includes(res[i] + " " + res[i + 1]) == true) {
+
+    TempArray2.push(TempArray2.push(res[i] + " " + res[i + 1]));
+
+
+  }
+
+}// END for
+
+//***************************************************
+//remove duplicates
+function onlyUnique(value, index, self) {
+  return self.indexOf(value) === index;
+}
+
+// usage example:
+var unique = TempArray2.filter(onlyUnique);
+
+//console.log(unique);
+
+
+runThis();
+var SecondArrayDeckText = [];
+function runThis() {
+  var e;
+  for (e = 0; e < unique.length; e++) {
+    CardClicked(unique[e]);
+
+  }
+
+}
+
+
+for (var i = 0; i < FirstArrayDeckText.length; i++) {
+
+  SecondArrayDeckText.push(FirstArrayDeckText[i] + ";");
+}
+//log("FirstArrayDeckText: " + FirstArrayDeckText);
+
+//https://link.clashroyale.com/deck/en?deck=26000051;26000067;28000014;26000047;26000060;26000064;26000053;28000018;
+//["28000012", "26000027", "26000068", "26000016", "26000063", "26000010", "28000016", "26000002"]
+var FinalFinal;
+var StartLink = "https://link.clashroyale.com/deck/en?deck=";
+var ConjoinAB;
+
+function GenerateLink() {
+
+  //remove commas
+  ConjoinAB = StartLink + SecondArrayDeckText;
+  FinalFinal = ConjoinAB.replaceAll(";,", ";");
+}
+
+GenerateLink();
+
+//END work done in console ********************************************************************************************************88
+
+
+//
+
+function CardClicked(ID) {
+  // log("ID: " + ID);
+
+  switch (ID) {
+    case 'archers': FirstArrayDeckText.push('26000001'); break;
+    case 'arrows': FirstArrayDeckText.push('28000001'); break;
+    case 'baby dragon': FirstArrayDeckText.push('26000015'); break;
+    case 'balloon': FirstArrayDeckText.push('26000006'); break;
+    case 'bandit': FirstArrayDeckText.push('26000046'); break;
+    case 'barbarian hut': FirstArrayDeckText.push('27000005'); break;
+    case 'barbarians': FirstArrayDeckText.push('26000008'); break;
+    case 'bats': FirstArrayDeckText.push('26000049'); break;
+    case 'battle ram': FirstArrayDeckText.push('26000036'); break;
+    case 'bomb tower': FirstArrayDeckText.push('27000004'); break;
+    case 'bomber': FirstArrayDeckText.push('26000013'); break;
+    case 'bowler': FirstArrayDeckText.push('26000034'); break;
+    case 'cannon': FirstArrayDeckText.push('27000000'); break;
+    case 'cannon cart': FirstArrayDeckText.push('26000054'); break;
+    case 'clone': FirstArrayDeckText.push('28000013'); break;
+    case 'dark prince': FirstArrayDeckText.push('26000027'); break;
+    case 'dart goblin': FirstArrayDeckText.push('26000040'); break;
+    case 'electro wizard': FirstArrayDeckText.push('26000042'); break;
+    case 'elite barbarians': FirstArrayDeckText.push('26000043'); break;
+    case 'elixir collector': FirstArrayDeckText.push('27000007'); break;
+    case 'executioner': FirstArrayDeckText.push('26000045'); break;
+    case 'fire spirits': FirstArrayDeckText.push('26000031'); break;
+    case 'fireball': FirstArrayDeckText.push('28000000'); break;
+    case 'flying machine': FirstArrayDeckText.push('26000057'); break;
+    case 'freeze': FirstArrayDeckText.push('28000005'); break;
+    case 'furnace': FirstArrayDeckText.push('27000010'); break;
+    case 'giant': FirstArrayDeckText.push('26000003'); break;
+    case 'giant skeleton': FirstArrayDeckText.push('26000020'); break;
+    case 'goblin barrel': FirstArrayDeckText.push('28000004'); break;
+    case 'goblin gang': FirstArrayDeckText.push('26000041'); break;
+    case 'goblin hut': FirstArrayDeckText.push('27000001'); break;
+    case 'goblins': FirstArrayDeckText.push('26000002'); break;
+    case 'golem': FirstArrayDeckText.push('26000009'); break;
+    case 'graveyard': FirstArrayDeckText.push('28000010'); break;
+    case 'guards': FirstArrayDeckText.push('26000025'); break;
+    case 'heal spirit': FirstArrayDeckText.push('28000016'); break;
+    case 'hog rider': FirstArrayDeckText.push('26000021'); break;
+    case 'hunter': FirstArrayDeckText.push('26000044'); break;
+    case 'ice golem': FirstArrayDeckText.push('26000038'); break;
+    case 'ice spirit': FirstArrayDeckText.push('26000030'); break;
+    case 'ice wizard': FirstArrayDeckText.push('26000023'); break;
+    case 'inferno dragon': FirstArrayDeckText.push('26000037'); break;
+    case 'inferno tower': FirstArrayDeckText.push('27000003'); break;
+    case 'knight': FirstArrayDeckText.push('26000000'); break;
+    case 'lava hound': FirstArrayDeckText.push('26000029'); break;
+    case 'lightning': FirstArrayDeckText.push('28000007'); break;
+    case 'lumberjack': FirstArrayDeckText.push('26000035'); break;
+    case 'mega knight': FirstArrayDeckText.push('26000055'); break;
+    case 'mega minion': FirstArrayDeckText.push('26000039'); break;
+    case 'miner': FirstArrayDeckText.push('26000032'); break;
+    case 'mini pekka': FirstArrayDeckText.push('26000018'); break;
+    case 'minion horde': FirstArrayDeckText.push('26000022'); break;
+    case 'minions': FirstArrayDeckText.push('26000005'); break;
+    case 'mirror': FirstArrayDeckText.push('28000006'); break;
+    case 'mortar': FirstArrayDeckText.push('27000002'); break;
+    case 'musketeer': FirstArrayDeckText.push('26000014'); break;
+    case 'night witch': FirstArrayDeckText.push('26000048'); break;
+    case 'pekka': FirstArrayDeckText.push('26000004'); break;
+    case 'poison': FirstArrayDeckText.push('28000009'); break;
+    case 'prince': FirstArrayDeckText.push('26000016'); break;
+    case 'princess': FirstArrayDeckText.push('26000026'); break;
+    case 'rage': FirstArrayDeckText.push('28000002'); break;
+    case 'rocket': FirstArrayDeckText.push('28000003'); break;
+    case 'royal ghost': FirstArrayDeckText.push('26000050'); break;
+    case 'royal giant': FirstArrayDeckText.push('26000024'); break;
+    case 'skeleton army': FirstArrayDeckText.push('26000012'); break;
+    case 'skeleton barrel': FirstArrayDeckText.push('26000056'); break;
+    case 'skeletons': FirstArrayDeckText.push('26000010'); break;
+    case 'sparky': FirstArrayDeckText.push('26000033'); break;
+    case 'spear goblins': FirstArrayDeckText.push('26000019'); break;
+    case 'tesla': FirstArrayDeckText.push('27000006'); break;
+    case 'log': FirstArrayDeckText.push('28000011'); break;
+    case 'three musketeers': FirstArrayDeckText.push('26000028'); break;
+    case 'tombstone': FirstArrayDeckText.push('27000009'); break;
+    case 'tornado': FirstArrayDeckText.push('28000012'); break;
+    case 'valkyrie': FirstArrayDeckText.push('26000011'); break;
+    case 'witch': FirstArrayDeckText.push('26000007'); break;
+    case 'wizard': FirstArrayDeckText.push('26000017'); break;
+    case 'x bow': FirstArrayDeckText.push('27000008'); break;
+    case 'zap': FirstArrayDeckText.push('28000008'); break;
+    case 'zappies': FirstArrayDeckText.push('26000052'); break;
+    case 'barbarian barrel': FirstArrayDeckText.push('28000015'); break;
+    case 'magic archer': FirstArrayDeckText.push('26000062'); break;
+    case 'goblin cage': FirstArrayDeckText.push('27000012'); break;
+    case 'fisherman': FirstArrayDeckText.push('26000061'); break;
+    case 'skeleton dragon': FirstArrayDeckText.push('26000080'); break;
+    case 'giant snowball': FirstArrayDeckText.push('28000017'); break;
+    case 'battle healer': FirstArrayDeckText.push('26000068'); break;
+    case 'electro dragon': FirstArrayDeckText.push('26000063'); break;
+    case 'wall breakers': FirstArrayDeckText.push('26000058'); break;
+    case 'ram rider': FirstArrayDeckText.push('26000051'); break;
+    case 'elixir golem': FirstArrayDeckText.push('26000067'); break;
+    case 'earthquake': FirstArrayDeckText.push('28000014'); break;
+    case 'royal recruits': FirstArrayDeckText.push('26000047'); break;
+    case 'goblin giant': FirstArrayDeckText.push('26000060'); break;
+    case 'firecracker': FirstArrayDeckText.push('26000064'); break;
+    case 'rascals': FirstArrayDeckText.push('26000053'); break;
+    case 'royal delivery': FirstArrayDeckText.push('2800001'); break;
+    //case	'electro spirit':	FirstArrayDeckText.push(		;	 break;
+    //case	'electro giant':	FirstArrayDeckText.push(		;	 break;
+
+
+    // code block
+  }
+
+
+}// END card clicked
+
+
+      // END MY CODE
+
+    };
+
+    recognition.onspeechend = function () {
+      recognition.stop();
+    };
+
+    recognition.onerror = function (event) {
+      message.textContent = 'Error occurred in recognition: ' + event.error;
+    }
+
+    document.querySelector('#btnGiveCommand').addEventListener('click', function () {
+      recognition.start();
+
+    });
+
+    document.querySelector('#MyStopRecognitionBtn').addEventListener('click', function () {
+      recognition.stop();
+
+    });
+
+
+  </script>
+
+  <!-- ########################################################################-->
+  <div id="DeckLink"> </div>
+
+  <div class="CardContainer">
+    <hr>
+
+
+    <div class="DividerText">Troops </div>
+
+    <img class="CardImage" id="archers" title="archers" onclick="CardClicked(this.id)"
+      src='C:/Users/User/Downloads/cr-api-assets-master/cr-api-assets-master/cards-150/archers.png'>
+    <img class="CardImage" id="baby dragon" title="baby dragon" onclick="CardClicked(this.id)"
+      src='C:/Users/User/Downloads/cr-api-assets-master/cr-api-assets-master/cards-150/baby-dragon.png'>
+    <img class="CardImage" id="balloon" title="balloon" onclick="CardClicked(this.id)"
+      src='C:/Users/User/Downloads/cr-api-assets-master/cr-api-assets-master/cards-150/balloon.png'>
+    <img class="CardImage" id="bandit" title="bandit" onclick="CardClicked(this.id)"
+      src='C:/Users/User/Downloads/cr-api-assets-master/cr-api-assets-master/cards-150/bandit.png'>
+    <img class="CardImage" id="barbarians" title="barbarians" onclick="CardClicked(this.id)"
+      src='C:/Users/User/Downloads/cr-api-assets-master/cr-api-assets-master/cards-150/barbarians.png'>
+    <img class="CardImage" id="bats" title="bats" onclick="CardClicked(this.id)"
+      src='C:/Users/User/Downloads/cr-api-assets-master/cr-api-assets-master/cards-150/bats.png'>
+    <img class="CardImage" id="battle ram" title="battle ram" onclick="CardClicked(this.id)"
+      src='C:/Users/User/Downloads/cr-api-assets-master/cr-api-assets-master/cards-150/battle-ram.png'>
+    <img class="CardImage" id="bomber" title="bomber" onclick="CardClicked(this.id)"
+      src='C:/Users/User/Downloads/cr-api-assets-master/cr-api-assets-master/cards-150/bomber.png'>
+    <img class="CardImage" id="bowler" title="bowler" onclick="CardClicked(this.id)"
+      src='C:/Users/User/Downloads/cr-api-assets-master/cr-api-assets-master/cards-150/bowler.png'>
+    <img class="CardImage" id="cannon cart" title="cannon cart" onclick="CardClicked(this.id)"
+      src='C:/Users/User/Downloads/cr-api-assets-master/cr-api-assets-master/cards-150/cannon-cart.png'>
+    <img class="CardImage" id="dark prince" title="dark prince" onclick="CardClicked(this.id)"
+      src='C:/Users/User/Downloads/cr-api-assets-master/cr-api-assets-master/cards-150/dark-prince.png'>
+    <img class="CardImage" id="dart goblin" title="dart goblin" onclick="CardClicked(this.id)"
+      src='C:/Users/User/Downloads/cr-api-assets-master/cr-api-assets-master/cards-150/dart-goblin.png'>
+    <img class="CardImage" id="electro wizard" title="electro wizard" onclick="CardClicked(this.id)"
+      src='C:/Users/User/Downloads/cr-api-assets-master/cr-api-assets-master/cards-150/electro-wizard.png'>
+    <img class="CardImage" id="elite barbarians" title="elite barbarians" onclick="CardClicked(this.id)"
+      src='C:/Users/User/Downloads/cr-api-assets-master/cr-api-assets-master/cards-150/elite-barbarians.png'>
+    <img class="CardImage" id="executioner" title="executioner" onclick="CardClicked(this.id)"
+      src='C:/Users/User/Downloads/cr-api-assets-master/cr-api-assets-master/cards-150/executioner.png'>
+    <img class="CardImage" id="fire spirits" title="fire spirits" onclick="CardClicked(this.id)"
+      src='C:/Users/User/Downloads/cr-api-assets-master/cr-api-assets-master/cards-150/fire-spirits.png'>
+    <img class="CardImage" id="flying machine" title="flying machine" onclick="CardClicked(this.id)"
+      src='C:/Users/User/Downloads/cr-api-assets-master/cr-api-assets-master/cards-150/flying-machine.png'>
+    <img class="CardImage" id="giant" title="giant" onclick="CardClicked(this.id)"
+      src='C:/Users/User/Downloads/cr-api-assets-master/cr-api-assets-master/cards-150/giant.png'>
+    <img class="CardImage" id="giant skeleton" title="giant skeleton" onclick="CardClicked(this.id)"
+      src='C:/Users/User/Downloads/cr-api-assets-master/cr-api-assets-master/cards-150/giant-skeleton.png'>
+    <img class="CardImage" id="goblin gang" title="goblin gang" onclick="CardClicked(this.id)"
+      src='C:/Users/User/Downloads/cr-api-assets-master/cr-api-assets-master/cards-150/goblin-gang.png'>
+    <img class="CardImage" id="goblins" title="goblins" onclick="CardClicked(this.id)"
+      src='C:/Users/User/Downloads/cr-api-assets-master/cr-api-assets-master/cards-150/goblins.png'>
+    <img class="CardImage" id="golem" title="golem" onclick="CardClicked(this.id)"
+      src='C:/Users/User/Downloads/cr-api-assets-master/cr-api-assets-master/cards-150/golem.png'>
+    <img class="CardImage" id="guards" title="guards" onclick="CardClicked(this.id)"
+      src='C:/Users/User/Downloads/cr-api-assets-master/cr-api-assets-master/cards-150/guards.png'>
+    <img class="CardImage" id="heal spirit" title="heal spirit" onclick="CardClicked(this.id)"
+      src='C:/Users/User/Downloads/cr-api-assets-master/cr-api-assets-master/cards-150/heal-spirit.png'>
+    <img class="CardImage" id="hog rider" title="hog rider" onclick="CardClicked(this.id)"
+      src='C:/Users/User/Downloads/cr-api-assets-master/cr-api-assets-master/cards-150/hog-rider.png'>
+    <img class="CardImage" id="hunter" title="hunter" onclick="CardClicked(this.id)"
+      src='C:/Users/User/Downloads/cr-api-assets-master/cr-api-assets-master/cards-150/hunter.png'>
+    <img class="CardImage" id="ice golem" title="ice golem" onclick="CardClicked(this.id)"
+      src='C:/Users/User/Downloads/cr-api-assets-master/cr-api-assets-master/cards-150/ice-golem.png'>
+    <img class="CardImage" id="ice spirit" title="ice spirit" onclick="CardClicked(this.id)"
+      src='C:/Users/User/Downloads/cr-api-assets-master/cr-api-assets-master/cards-150/ice-spirit.png'>
+    <img class="CardImage" id="ice wizard" title="ice wizard" onclick="CardClicked(this.id)"
+      src='C:/Users/User/Downloads/cr-api-assets-master/cr-api-assets-master/cards-150/ice-wizard.png'>
+    <img class="CardImage" id="inferno dragon" title="inferno dragon" onclick="CardClicked(this.id)"
+      src='C:/Users/User/Downloads/cr-api-assets-master/cr-api-assets-master/cards-150/inferno-dragon.png'>
+    <img class="CardImage" id="knight" title="knight" onclick="CardClicked(this.id)"
+      src='C:/Users/User/Downloads/cr-api-assets-master/cr-api-assets-master/cards-150/knight.png'>
+    <img class="CardImage" id="lava hound" title="lava hound" onclick="CardClicked(this.id)"
+      src='C:/Users/User/Downloads/cr-api-assets-master/cr-api-assets-master/cards-150/lava-hound.png'>
+    <img class="CardImage" id="lumberjack" title="lumberjack" onclick="CardClicked(this.id)"
+      src='C:/Users/User/Downloads/cr-api-assets-master/cr-api-assets-master/cards-150/lumberjack.png'>
+    <img class="CardImage" id="mega knight" title="mega knight" onclick="CardClicked(this.id)"
+      src='C:/Users/User/Downloads/cr-api-assets-master/cr-api-assets-master/cards-150/mega-knight.png'>
+    <img class="CardImage" id="mega minion" title="mega minion" onclick="CardClicked(this.id)"
+      src='C:/Users/User/Downloads/cr-api-assets-master/cr-api-assets-master/cards-150/mega-minion.png'>
+    <img class="CardImage" id="miner" title="miner" onclick="CardClicked(this.id)"
+      src='C:/Users/User/Downloads/cr-api-assets-master/cr-api-assets-master/cards-150/miner.png'>
+    <img class="CardImage" id="mini pekka" title="mini pekka" onclick="CardClicked(this.id)"
+      src='C:/Users/User/Downloads/cr-api-assets-master/cr-api-assets-master/cards-150/mini-pekka.png'>
+    <img class="CardImage" id="minion horde" title="minion horde" onclick="CardClicked(this.id)"
+      src='C:/Users/User/Downloads/cr-api-assets-master/cr-api-assets-master/cards-150/minion-horde.png'>
+    <img class="CardImage" id="minions" title="minions" onclick="CardClicked(this.id)"
+      src='C:/Users/User/Downloads/cr-api-assets-master/cr-api-assets-master/cards-150/minions.png'>
+    <img class="CardImage" id="musketeer" title="musketeer" onclick="CardClicked(this.id)"
+      src='C:/Users/User/Downloads/cr-api-assets-master/cr-api-assets-master/cards-150/musketeer.png'>
+    <img class="CardImage" id="night witch" title="night witch" onclick="CardClicked(this.id)"
+      src='C:/Users/User/Downloads/cr-api-assets-master/cr-api-assets-master/cards-150/night-witch.png'>
+    <img class="CardImage" id="pekka" title="pekka" onclick="CardClicked(this.id)"
+      src='C:/Users/User/Downloads/cr-api-assets-master/cr-api-assets-master/cards-150/pekka.png'>
+    <img class="CardImage" id="prince" title="prince" onclick="CardClicked(this.id)"
+      src='C:/Users/User/Downloads/cr-api-assets-master/cr-api-assets-master/cards-150/prince.png'>
+    <img class="CardImage" id="princess" title="princess" onclick="CardClicked(this.id)"
+      src='C:/Users/User/Downloads/cr-api-assets-master/cr-api-assets-master/cards-150/princess.png'>
+    <img class="CardImage" id="royal ghost" title="royal ghost" onclick="CardClicked(this.id)"
+      src='C:/Users/User/Downloads/cr-api-assets-master/cr-api-assets-master/cards-150/royal-ghost.png'>
+    <img class="CardImage" id="royal giant" title="royal giant" onclick="CardClicked(this.id)"
+      src='C:/Users/User/Downloads/cr-api-assets-master/cr-api-assets-master/cards-150/royal-giant.png'>
+    <img class="CardImage" id="skeleton army" title="skeleton army" onclick="CardClicked(this.id)"
+      src='C:/Users/User/Downloads/cr-api-assets-master/cr-api-assets-master/cards-150/skeleton-army.png'>
+    <img class="CardImage" id="skeleton barrel" title="skeleton barrel" onclick="CardClicked(this.id)"
+      src='C:/Users/User/Downloads/cr-api-assets-master/cr-api-assets-master/cards-150/skeleton-barrel.png'>
+    <img class="CardImage" id="skeletons" title="skeletons" onclick="CardClicked(this.id)"
+      src='C:/Users/User/Downloads/cr-api-assets-master/cr-api-assets-master/cards-150/skeletons.png'>
+    <img class="CardImage" id="sparky" title="sparky" onclick="CardClicked(this.id)"
+      src='C:/Users/User/Downloads/cr-api-assets-master/cr-api-assets-master/cards-150/sparky.png'>
+    <img class="CardImage" id="spear goblins" title="spear goblins" onclick="CardClicked(this.id)"
+      src='C:/Users/User/Downloads/cr-api-assets-master/cr-api-assets-master/cards-150/spear-goblins.png'>
+    <img class="CardImage" id="three musketeers" title="three musketeers" onclick="CardClicked(this.id)"
+      src='C:/Users/User/Downloads/cr-api-assets-master/cr-api-assets-master/cards-150/three-musketeers.png'>
+    <img class="CardImage" id="valkyrie" title="valkyrie" onclick="CardClicked(this.id)"
+      src='C:/Users/User/Downloads/cr-api-assets-master/cr-api-assets-master/cards-150/valkyrie.png'>
+    <img class="CardImage" id="witch" title="witch" onclick="CardClicked(this.id)"
+      src='C:/Users/User/Downloads/cr-api-assets-master/cr-api-assets-master/cards-150/witch.png'>
+    <img class="CardImage" id="wizard" title="wizard" onclick="CardClicked(this.id)"
+      src='C:/Users/User/Downloads/cr-api-assets-master/cr-api-assets-master/cards-150/wizard.png'>
+    <img class="CardImage" id="zappies" title="zappies" onclick="CardClicked(this.id)"
+      src='C:/Users/User/Downloads/cr-api-assets-master/cr-api-assets-master/cards-150/zappies.png'>
+    <img class="CardImage" id="magic archer" title="magic archer" onclick="CardClicked(this.id)"
+      src='C:/Users/User/Downloads/cr-api-assets-master/cr-api-assets-master/cards-150/magic-archer.png'>
+    <img class="CardImage" id="goblin cage" title="goblin cage" onclick="CardClicked(this.id)"
+      src='C:/Users/User/Downloads/cr-api-assets-master/cr-api-assets-master/cards-150/goblin-cage.png'>
+    <img class="CardImage" id="fisherman" title="fisherman" onclick="CardClicked(this.id)"
+      src='C:/Users/User/Downloads/cr-api-assets-master/cr-api-assets-master/cards-150/fisherman.png'>
+    <img class="CardImage" id="skeleton dragons" title="skeleton dragons" onclick="CardClicked(this.id)"
+      src='C:/Users/User/Downloads/cr-api-assets-master/cr-api-assets-master/cards-150/skeleton-dragons.png'>
+    <img class="CardImage" id="battle healer" title="battle healer" onclick="CardClicked(this.id)"
+      src='C:/Users/User/Downloads/cr-api-assets-master/cr-api-assets-master/cards-150/battle-healer.png'>
+    <img class="CardImage" id="electro dragon" title="electro dragon" onclick="CardClicked(this.id)"
+      src='C:/Users/User/Downloads/cr-api-assets-master/cr-api-assets-master/cards-150/electro-dragon.png'>
+    <img class="CardImage" id="wall breakers" title="wall breakers" onclick="CardClicked(this.id)"
+      src='C:/Users/User/Downloads/cr-api-assets-master/cr-api-assets-master/cards-150/wall-breakers.png'>
+    <img class="CardImage" id="ram rider" title="ram rider" onclick="CardClicked(this.id)"
+      src='C:/Users/User/Downloads/cr-api-assets-master/cr-api-assets-master/cards-150/ram-rider.png'>
+    <img class="CardImage" id="elixir golem" title="elixir golem" onclick="CardClicked(this.id)"
+      src='C:/Users/User/Downloads/cr-api-assets-master/cr-api-assets-master/cards-150/elixir-golem.png'>
+    <img class="CardImage" id="royal recruits" title="royal recruits" onclick="CardClicked(this.id)"
+      src='C:/Users/User/Downloads/cr-api-assets-master/cr-api-assets-master/cards-150/royal-recruits.png'>
+    <img class="CardImage" id="goblin giant" title="goblin giant" onclick="CardClicked(this.id)"
+      src='C:/Users/User/Downloads/cr-api-assets-master/cr-api-assets-master/cards-150/goblin-giant.png'>
+    <img class="CardImage" id="firecracker" title="firecracker" onclick="CardClicked(this.id)"
+      src='C:/Users/User/Downloads/cr-api-assets-master/cr-api-assets-master/cards-150/firecracker.png'>
+    <img class="CardImage" id="rascals" title="rascals" onclick="CardClicked(this.id)"
+      src='C:/Users/User/Downloads/cr-api-assets-master/cr-api-assets-master/cards-150/rascals.png'>
+    <!-- <img class="CardImage" id="electro spirit" title="electro spirit" onclick="CardClicked(this.id)" src='C:/Users/User/Downloads/cr-api-assets-master/cr-api-assets-master/cards-150/electro-spirit.png'>
+<img class="CardImage" id="electro giant" title="electro giant" onclick="CardClicked(this.id)" src='C:/Users/User/Downloads/cr-api-assets-master/cr-api-assets-master/cards-150/electro-giant.png'>
+ -->
+
+
+    <!-- -->
+    <hr>
+    <div class="DividerText">Spells </div>
+
+    <img class="CardImage" id="arrows" title="arrows" onclick="CardClicked(this.id)"
+      src='C:/Users/User/Downloads/cr-api-assets-master/cr-api-assets-master/cards-150/arrows.png'>
+    <img class="CardImage" id="clone" title="clone" onclick="CardClicked(this.id)"
+      src='C:/Users/User/Downloads/cr-api-assets-master/cr-api-assets-master/cards-150/clone.png'>
+    <img class="CardImage" id="fireball" title="fireball" onclick="CardClicked(this.id)"
+      src='C:/Users/User/Downloads/cr-api-assets-master/cr-api-assets-master/cards-150/fireball.png'>
+    <img class="CardImage" id="freeze" title="freeze" onclick="CardClicked(this.id)"
+      src='C:/Users/User/Downloads/cr-api-assets-master/cr-api-assets-master/cards-150/freeze.png'>
+    <img class="CardImage" id="goblin barrel" title="goblin barrel" onclick="CardClicked(this.id)"
+      src='C:/Users/User/Downloads/cr-api-assets-master/cr-api-assets-master/cards-150/goblin-barrel.png'>
+    <img class="CardImage" id="graveyard" title="graveyard" onclick="CardClicked(this.id)"
+      src='C:/Users/User/Downloads/cr-api-assets-master/cr-api-assets-master/cards-150/graveyard.png'>
+    <img class="CardImage" id="lightning" title="lightning" onclick="CardClicked(this.id)"
+      src='C:/Users/User/Downloads/cr-api-assets-master/cr-api-assets-master/cards-150/lightning.png'>
+    <img class="CardImage" id="mirror" title="mirror" onclick="CardClicked(this.id)"
+      src='C:/Users/User/Downloads/cr-api-assets-master/cr-api-assets-master/cards-150/mirror.png'>
+    <img class="CardImage" id="poison" title="poison" onclick="CardClicked(this.id)"
+      src='C:/Users/User/Downloads/cr-api-assets-master/cr-api-assets-master/cards-150/poison.png'>
+    <img class="CardImage" id="rage" title="rage" onclick="CardClicked(this.id)"
+      src='C:/Users/User/Downloads/cr-api-assets-master/cr-api-assets-master/cards-150/rage.png'>
+    <img class="CardImage" id="rocket" title="rocket" onclick="CardClicked(this.id)"
+      src='C:/Users/User/Downloads/cr-api-assets-master/cr-api-assets-master/cards-150/rocket.png'>
+    <img class="CardImage" id="log" title="log" onclick="CardClicked(this.id)"
+      src='C:/Users/User/Downloads/cr-api-assets-master/cr-api-assets-master/cards-150/the-log.png'>
+    <img class="CardImage" id="tornado" title="tornado" onclick="CardClicked(this.id)"
+      src='C:/Users/User/Downloads/cr-api-assets-master/cr-api-assets-master/cards-150/tornado.png'>
+    <img class="CardImage" id="zap" title="zap" onclick="CardClicked(this.id)"
+      src='C:/Users/User/Downloads/cr-api-assets-master/cr-api-assets-master/cards-150/zap.png'>
+    <img class="CardImage" id="giant snowball" title="giant snowball" onclick="CardClicked(this.id)"
+      src='C:/Users/User/Downloads/cr-api-assets-master/cr-api-assets-master/cards-150/giant-snowball.png'>
+    <img class="CardImage" id="earthquake" title="earthquake" onclick="CardClicked(this.id)"
+      src='C:/Users/User/Downloads/cr-api-assets-master/cr-api-assets-master/cards-150/earthquake.png'>
+    <img class="CardImage" id="royal delivery" title="royal delivery" onclick="CardClicked(this.id)"
+      src='C:/Users/User/Downloads/cr-api-assets-master/cr-api-assets-master/cards-150/royal-delivery.png'>
+    <img class="CardImage" id="barbarian barrel" title="barbarian barrel" onclick="CardClicked(this.id)"
+      src='C:/Users/User/Downloads/cr-api-assets-master/cr-api-assets-master/cards-150/barbarian-barrel.png'>
+    <hr>
+
+    <div class="DividerText">Buildings </div>
+
+    <img class="CardImage" id="cannon" title="cannon" onclick="CardClicked(this.id)"
+      src='C:/Users/User/Downloads/cr-api-assets-master/cr-api-assets-master/cards-150/cannon.png'>
+    <img class="CardImage" id="barbarian hut" title="barbarian hut" onclick="CardClicked(this.id)"
+      src='C:/Users/User/Downloads/cr-api-assets-master/cr-api-assets-master/cards-150/barbarian-hut.png'>
+    <img class="CardImage" id="bomb tower" title="bomb tower" onclick="CardClicked(this.id)"
+      src='C:/Users/User/Downloads/cr-api-assets-master/cr-api-assets-master/cards-150/bomb-tower.png'>
+    <img class="CardImage" id="elixir collector" title="elixir collector" onclick="CardClicked(this.id)"
+      src='C:/Users/User/Downloads/cr-api-assets-master/cr-api-assets-master/cards-150/elixir-collector.png'>
+    <img class="CardImage" id="furnace" title="furnace" onclick="CardClicked(this.id)"
+      src='C:/Users/User/Downloads/cr-api-assets-master/cr-api-assets-master/cards-150/furnace.png'>
+    <img class="CardImage" id="goblin hut" title="goblin hut" onclick="CardClicked(this.id)"
+      src='C:/Users/User/Downloads/cr-api-assets-master/cr-api-assets-master/cards-150/goblin-hut.png'>
+    <img class="CardImage" id="inferno tower" title="inferno tower" onclick="CardClicked(this.id)"
+      src='C:/Users/User/Downloads/cr-api-assets-master/cr-api-assets-master/cards-150/inferno-tower.png'>
+    <img class="CardImage" id="mortar" title="mortar" onclick="CardClicked(this.id)"
+      src='C:/Users/User/Downloads/cr-api-assets-master/cr-api-assets-master/cards-150/mortar.png'>
+    <img class="CardImage" id="tesla" title="tesla" onclick="CardClicked(this.id)"
+      src='C:/Users/User/Downloads/cr-api-assets-master/cr-api-assets-master/cards-150/tesla.png'>
+    <img class="CardImage" id="tombstone" title="tombstone" onclick="CardClicked(this.id)"
+      src='C:/Users/User/Downloads/cr-api-assets-master/cr-api-assets-master/cards-150/tombstone.png'>
+    <img class="CardImage" id="x bow" title="x bow" onclick="CardClicked(this.id)"
+      src='C:/Users/User/Downloads/cr-api-assets-master/cr-api-assets-master/cards-150/x-bow.png'>
+    <hr>
+
+
+  </div><!-- END CardContainer-->
+
+
+  <script>
+
+
+
+
+
+
+
+
+
+  </script>
+
+
+
+  <style>
+    .CardImage {
+      height: 89px;
+    }
+
+    body {
+      background-image: url("https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTAq2XPlrLsg-3i_-YDN4QVcwTsvjLqerp9XQ&usqp=CAU");
+      background-color: black;
+      background-repeat: no-repeat;
+      background-size: 2000px 1000px;
+
+    }
+
+    #DeckLink {
+      background-color: aliceblue;
+    }
+
+    hr {
+      border: 0;
+      border-bottom: solid 6px black;
+    }
+
+    .DividerText {
+
+      font-size: 20px;
+      font-weight: bold;
+
+    }
+  </style>
+
+</body>
+
+</html>
